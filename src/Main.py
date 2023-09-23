@@ -1,6 +1,6 @@
-from classes.Client import Client
+from classes.Client import BotClient
 import os
 
-Bot = Client()
+Bot = BotClient()
 
 Bot.run(os.getenv('Token'))
