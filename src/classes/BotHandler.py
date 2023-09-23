@@ -19,7 +19,7 @@ class BotHandler:
     self.client = Client
     self.prefix = prefix
 
-  def messageParser(self, msgInfo):
+  async def messageParser(self, msgInfo):
     interaction_type = messageHandler(msgInfo, self.prefix)
 
     if interaction_type is None:
@@ -27,11 +27,8 @@ class BotHandler:
 
     if interaction_type:
       command, response = commandHandler(msgInfo, self.prefix, self.commands)
-      command(self.client, msgInfo, response)
+      await command(self.client, msgInfo, response)
     else:
       None
       #eventHandler()
-
-
-                  
     
