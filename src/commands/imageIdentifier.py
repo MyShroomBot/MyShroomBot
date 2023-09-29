@@ -4,6 +4,7 @@ Once invoked, you can submit a photo in one of the supported formats (PNG, JPG, 
 Subsequently, you will receive a response listing the five most likely mushroom species, organized in descending order of probability.
 """
 
+from asyncio import TimeoutError
 from attributes.command_a import command
 from attributes.rename_a import rename
 
@@ -19,9 +20,9 @@ async def imageIdentifier(Client, ctx, extra):
     await ctx.channel.send(image_text)
     def checkerResponse(m):
         return m.attachments and m.channel == ctx.channel and m.author == ctx.author
-    response = await Client.wait_for('message', timeout=30.0, check=checkerResponse)
-
-    if not response:
+    try:
+        response = await Client.wait_for('message', timeout=30.0, check=checkerResponse)
+    except TimeoutError:
         await ctx.channel.send(error_noImage)
         return
     
@@ -35,6 +36,8 @@ async def imageIdentifier(Client, ctx, extra):
         return
     
     probs = model.analize(attachment.url) #Conexión base de datos
+    #cargar modelos
+    #aplicar funcion
 
     answer = ''
     for prob in probs:
