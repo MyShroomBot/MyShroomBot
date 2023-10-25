@@ -39,14 +39,9 @@ async def imageIdentifier(Client, ctx, extra):
     if attachment.size > 10000000:
         await ctx.channel.send(error_noSize)
         return
-    try:
-        resp= requests.get(attachment.url)
-        img = Image.open(BytesIO(resp.content))
-    except:
-        raise Exception
 
-    Model = decoder.idmodel #Corregir 
-    probs = Model.predict(img)
+    Model = decoder.idmodel() #Corregir 
+    probs = Model.predict(attachment.url)
     if  probs == 'Other':
         answer =  f'Sorry. I did not identify a **mushroom**. Try another image.'
     if probs.startswith('Other'):

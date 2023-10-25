@@ -4,5 +4,4 @@ from dotenv import load_dotenv
 
 Bot = BotClient()
 load_dotenv()
-
 Bot.run(os.getenv('Token',''))

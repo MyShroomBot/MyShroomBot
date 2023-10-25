@@ -23,12 +23,13 @@ class BotHandler:
     interaction_type = messageHandler(msgInfo, self.prefix)
 
     if interaction_type is None:
-      raise EOFError #TERMINAR!
+        # If no interaction type was found, return
+        return
 
     if interaction_type:
-      command, response = commandHandler(msgInfo, self.prefix, self.commands)
-      await command(self.client, msgInfo, response)
+        command, response = commandHandler(msgInfo, self.prefix, self.commands)
+        await command(self.client, msgInfo, response)
     else:
-      None
-      #eventHandler()
+        # If no command was found, handle the event
+        await eventHandler(msgInfo)
     
