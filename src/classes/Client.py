@@ -10,7 +10,7 @@ class BotClient(discord.Client):
 	
 	def __init__(self):
 		c_prefix = '!'
-		c_intents = discord.Intents.default()
+		c_intents = discord.Intents.all()
 		c_intents.message_content = True
 		super().__init__(intents = c_intents, command_prefix = c_prefix, help_command=None)
 		

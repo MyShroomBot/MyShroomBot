@@ -7,7 +7,7 @@ Subsequently, you will receive a response listing the five most likely mushroom 
 from asyncio import TimeoutError
 from attributes.command_a import command
 from attributes.rename_a import rename
-from models.decoder import IdentifierModel as model
+from models import decoder
 
 from PIL import Image
 import requests
@@ -45,7 +45,7 @@ async def imageIdentifier(Client, ctx, extra):
     except:
         raise Exception
 
-    Model = model() #Corregir 
+    Model = decoder.idmodel #Corregir 
     probs = Model.predict(img)
     if  probs == 'Other':
         answer =  f'Sorry. I did not identify a **mushroom**. Try another image.'
