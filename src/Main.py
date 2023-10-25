@@ -3,4 +3,4 @@ import os
 
 Bot = BotClient()
 
-Bot.run(os.getenv('Token'))
+Bot.run(os.getenv('Token',''))

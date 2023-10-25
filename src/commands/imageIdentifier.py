@@ -7,6 +7,11 @@ Subsequently, you will receive a response listing the five most likely mushroom 
 from asyncio import TimeoutError
 from attributes.command_a import command
 from attributes.rename_a import rename
+from models.decoder import IdentifierModel as model
+
+from PIL import Image
+import requests
+from io import BytesIO
 
 valid_types = ('.png', '.jpg', '.jpeg', '.tiff', '.bmp')
 image_text = 'Hello! Send me the image you wish me to analize.'
@@ -21,7 +26,7 @@ async def imageIdentifier(Client, ctx, extra):
     def checkerResponse(m):
         return m.attachments and m.channel == ctx.channel and m.author == ctx.author
     try:
-        response = await Client.wait_for('message', timeout=30.0, check=checkerResponse)
+        response = await Client.wait_for('message', timeout=60.0, check=checkerResponse)
     except TimeoutError:
         await ctx.channel.send(error_noImage)
         return
@@ -34,14 +39,23 @@ async def imageIdentifier(Client, ctx, extra):
     if attachment.size > 10000000:
         await ctx.channel.send(error_noSize)
         return
-    
-    probs = model.analize(attachment.url) #Conexión base de datos
-    #cargar modelos
-    #aplicar funcion
+    try:
+        resp= requests.get(attachment.url)
+        img = Image.open(BytesIO(resp.content))
+    except:
+        raise Exception
 
-    answer = ''
-    for prob in probs:
-        answer += f'> {prob[0]} \n'
+    Model = model() #Corregir 
+    probs = Model.predict(img)
+    if  probs == 'Other':
+        answer =  f'Sorry. I did not identify a **mushroom**. Try another image.'
+    if probs.startswith('Other'):
+        answer = f'You have found a **mushroom!**. This is an {probs}.'
+    else:
+        answer = f'You have found a **mushroom!**. This is the Scientific name: {probs}.'
+
+    #for prob in probs:
+    #   answer += f'> {prob[0]} \n'
     await ctx.channel.send(answer)
 
 imageIdentifier.__doc__ = __doc__
