@@ -9,7 +9,7 @@ from attributes.command_a import command
 from attributes.rename_a import rename
 from models import decoder
 from commands.balance import open_account,getdatabasedata
-from commands.quests import checkprogressquest1,checkprogressquest2
+from modules.progressHandler import checkprogressquest1,checkprogressquest2
 from PIL import Image
 import requests
 from io import BytesIO
