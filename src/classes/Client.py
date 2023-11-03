@@ -20,8 +20,8 @@ class BotClient(discord.Client):
 		print(f'{self.user.name} se ha iniciado correctamente.')
 
 	async def on_message(self, message):
-		if os.getenv('Environment','') == 'live' and (message.guild is None 
-														or message.guild.id != int(os.getenv('GuildID'))): #CORRECIÓN
+		if os.getenv('Environment','') == 'testing' and (message.guild is None 
+														or message.guild.id != int(os.getenv('GuildID'))):
 			return
 
 		if message.guild.id == '1157074447719735357' and message.channel != '1157112268878774301':
