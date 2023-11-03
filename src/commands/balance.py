@@ -1,3 +1,7 @@
+"""
+Command for Checking your MyShroom Coins:
+Once invoked, you can check your balances of coins for analyzing Mushrooms images. Remember if you do not have Coins you can't analyze!
+"""
 import json
 from discord.ext import commands
 from attributes.command_a import command
@@ -12,8 +16,8 @@ async def balance(Client,ctx, extra):
     await open_account(user)
     users = await getdatabasedata()
     wallet_amount=users[str(user.id)]["wallet"]
-    em = discord.Embed(title = f"{ctx.author.name}s balance", color = discord.Colour.red())
-    em.add_field(name = "Wallet balance", value = str(wallet_amount) + 'ShroomCoins')
+    em = discord.Embed(title = f"{ctx.author.name}'s balance", color = discord.Colour.red())
+    em.add_field(name = "Wallet Balance", value = str(wallet_amount) + ' ShroomCoins')
     em.set_thumbnail(url = user.avatar)
     await ctx.channel.send(embed = em)
 
@@ -38,6 +42,7 @@ async def give(Client, ctx, member: discord.Member):
     await ctx.channel.send(f"Someone gave you {coin_amount} Shroomcoins!!")
     with open('src/files/database.json','w') as f:
         json.dump(users,f)
+
 async def open_account(user):
     users = await getdatabasedata()
     if str(user.id) in users:
@@ -55,3 +60,5 @@ async def getdatabasedata():
     with open ('src/files/database.json','r') as f:
         users  = json.load(f)
     return users
+
+balance.__doc__ = __doc__
