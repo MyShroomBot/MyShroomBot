@@ -1,3 +1,9 @@
+"""
+Command for Adquiring Quests:
+Here you can get differents quests so you can earn the MyShroom Coins! 
+After using it just type the number of the quest you like the most and go for it! 
+"""
+
 import json
 from discord.ext import commands
 from attributes.command_a import command
@@ -14,6 +20,7 @@ error_noReply = 'Sorry, we did not receive a response in the time window'
 quest_text = 'Welcome to the Myshroom quest board, where you can earn ShroomCoins by going on adventures!\nType the number of one of the following quests to begin you new adventure:\n1. Succesfully identify 2 different mushroom species (reward: 5 ShroomCoins)\n2. Succesfully identify 3 mushroom varieties from the Agaricus family (reward: 5 ShroomCoins)'
 quest_in_progress = 'Sorry, you already finished or accepted his quest'
 quest_complete = 'Congratulations! you completed the quest! Check your balance to see your rewards!'
+
 @rename('getquest')
 @command
 async def getquest(Client,ctx, extra):
@@ -44,35 +51,5 @@ async def getquest(Client,ctx, extra):
             await ctx.channel.send(quest_in_progress)
     with open('src/files/database.json','w') as f:
         json.dump(users,f)
-@rename('questboard')
-@command
-async def questboard(Client,ctx, extra):
-    user = ctx.author
-    await open_account(user)
-    users = await getdatabasedata()
-    quest1prog = users[str(user.id)]['quest1']
-    quest2prog = users[str(user.id)]['quest2']
-    em = discord.Embed(title = f"{ctx.author.name}s quests", color = discord.Colour.teal())
-    em.add_field(name = "Quest 1", value = str(quest1prog) + '/3 completed' )
-    em.add_field(name = "Quest 2", value = str(quest2prog) + '/3 completed')
-    em.set_thumbnail(url = user.avatar)
-    await ctx.channel.send(embed = em)
 
-async def checkprogressquest1(users,user,ctx):
-    if (users[str(user.id)]['quest1'] < 3) and (users[str(user.id)]['quest1'] > 0) :
-        users[str(user.id)]['quest1'] += 1
-        if users[str(user.id)]['quest1'] == 3:
-            users[str(user.id)]['wallet'] +=5
-            await ctx.channel.send(quest_complete)
-    with open('src/files/database.json','w') as f:
-        json.dump(users,f)
-async def checkprogressquest2(users,user,ctx):
-    if (users[str(user.id)]['quest2'] < 3) and (users[str(user.id)]['quest2'] > 0) :
-        users[str(user.id)]['quest2'] += 1
-        if users[str(user.id)]['quest2'] == 3:
-            users[str(user.id)]['wallet'] +=5
-            await ctx.channel.send(quest_complete)
-    with open('src/files/database.json','w') as f:
-        json.dump(users,f)
-        
-    
+getquest.__doc__ = __doc__
