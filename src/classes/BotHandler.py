@@ -1,6 +1,7 @@
 from commands.help import help 
 from commands.imageIdentifier import imageIdentifier
-
+from commands.balance import balance,give
+from commands.quests import getquest, questboard
 from events.guild_join import on_guild_join
 
 from modules.messageHandler import messageHandler
@@ -10,7 +11,7 @@ from modules.eventHandler import eventHandler
 class BotHandler:
 
   def __init__(self, Client, prefix):
-    commands = [help, imageIdentifier]
+    commands = [help, imageIdentifier, balance, give, getquest,questboard]
     commands_name = [c.__name__ for c in commands]
 
     self.commands = dict(zip(commands_name, commands))

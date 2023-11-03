@@ -7,18 +7,17 @@ import requests
 from io import BytesIO
 import torch
 
-class idmodel:
+class IdentifierModel:
     def __init__(self):
         model = resnet34()
         in_features = model.fc.in_features
         model.fc = nn.Linear(in_features, 114)
         dev = device("cpu")
         model.to(dev)
-        model.load_state_dict(load('/home/juanruedz/Desktop/PlanB myshroom/myshroomweights114.pth',map_location=torch.device('cpu')))
+        model.load_state_dict(load('./src/files/myshroomweights114.pth',map_location=torch.device('cpu')))
         model.eval()
         self.mod = model
-    def predict (self, url):
-        data_transforms = transforms.Compose([
+        self.data_transforms = transforms.Compose([
                 transforms.Resize((150,150)),
                 transforms.ToTensor(),
                 transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])
@@ -136,16 +135,16 @@ class idmodel:
         'Tylopilus_rubrobrunneus': 111,
         'Xerocomellus_chrysenteron': 112,
         'Xerocomus_subtomentosus': 113}
-        
         keys = dicti.values()
         values = dicti.keys()
-        class_mapping = dict(zip(keys, values))
+        self.class_mapping = dict(zip(keys, values))
+        
+    def predict (self, url):
         resp= requests.get(url)
         img = Image.open(BytesIO(resp.content))
-        clean_image = data_transforms(img)
+        clean_image = self.data_transforms(img)
         clean_image = torch.unsqueeze(clean_image,dim=0)
         prediction = self.mod(clean_image)
         predicted_index = int(prediction[0].argmax(0))
-        predicted = class_mapping[predicted_index]
-        print(predicted_index)
+        predicted = self.class_mapping[predicted_index]
         return predicted
