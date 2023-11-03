@@ -1,7 +1,8 @@
 from commands.help import help 
 from commands.imageIdentifier import imageIdentifier
 from commands.balance import balance,give
-from commands.quests import getquest, questboard
+from commands.quests import getquest
+from commands.progressBoard import questboard
 from events.guild_join import on_guild_join
 
 from modules.messageHandler import messageHandler
