@@ -29,8 +29,11 @@ class BotHandler:
         return
 
     if interaction_type:
+      try:
         command, response = commandHandler(msgInfo, self.prefix, self.commands)
         await command(self.client, msgInfo, response)
+      except Exception:
+        return
     else:
         # If no command was found, handle the event
         await eventHandler(msgInfo)
