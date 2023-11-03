@@ -6,13 +6,13 @@ Simply type '!help <command>' and you'll receive the information of the commands
 
 from attributes.command_a import command
 
-help_text = '> help - Command for providing help. \n > shroom - Command for Analyzing Mushroom Images.'
+help_text = '> help - Provides help. \n > shroom - Analyze Mushroom Images. \n > balance - Checks your MyShroom Coins \n > getquest - Adquire Quests \n > questboard - Check your progress'
 error_no_command_text = 'Command not recognized. Type !help for see the commands available.'
 
 @command
 async def help(Client, ctx, command_name):
 	if not command_name:
-		await ctx.channel.send(help_text) #for in docstring.strip().split('\n')[0]
+			await ctx.channel.send(help_text) 
 	else:
 		commands = Client.handler.commands
 		list_names = list(commands.keys())
