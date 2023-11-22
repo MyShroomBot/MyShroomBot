@@ -72,7 +72,7 @@ class IdentifierModel:
         'Ganoderma_tsugae': 48,
         'Gliophorus_psittacinus': 49,
         'Grifola_frondosa': 50,
-        'Harrya_chromipes': 51,
+        'Harrya_chromapes': 51,
         'Hericium_americanum': 52,
         'Hericium_coralloides': 53,
         'Hericium_erinaceus': 54,
