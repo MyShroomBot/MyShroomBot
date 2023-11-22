@@ -1,18 +1,20 @@
-async def checkprogressquest1(users,user,ctx):
-    if (users[str(user.id)]['quest1'] < 3) and (users[str(user.id)]['quest1'] > 0) :
-        users[str(user.id)]['quest1'] += 1
-        if users[str(user.id)]['quest1'] == 3:
-            users[str(user.id)]['wallet'] +=5
-            await ctx.channel.send(quest_complete)
-    with open('src/files/database.json','w') as f:
-        json.dump(users,f)
+from modules.databaseHandler import getUser, modifyCoins, modifyQuests
 
-async def checkprogressquest2(users,user,ctx):
-    if (users[str(user.id)]['quest2'] < 3) and (users[str(user.id)]['quest2'] > 0) :
-        users[str(user.id)]['quest2'] += 1
-        if users[str(user.id)]['quest2'] == 3:
-            users[str(user.id)]['wallet'] +=5
-            await ctx.channel.send(quest_complete)
-    with open('src/files/database.json','w') as f:
-        json.dump(users,f)
+quest_complete = 'Congratulations! you completed the quest! Check your balance to see your rewards!'
+
+async def checkerQ1(id, ctx):
+    user_data = await getUser(str(id))
+    if (user_data['quest1'] < 3) and (user_data['quest1'] > -1) :
+        await modifyQuests(str(id),'quest1')
+        if user_data['quest1'] == 2:
+            await modifyCoins(str(id),amount=5)
+            await ctx.channel.send(content=quest_complete)
+
+async def checkerQ2(id,ctx):
+    user_data = await getUser(str(id))
+    if (user_data['quest2'] < 2) and (user_data['quest2'] > -1) :
+        await modifyQuests(str(id),'quest1')
+        if user_data['quest1'] == 1:
+            await modifyCoins(str(id),amount=5)
+            await ctx.channel.send(content=quest_complete)
         
