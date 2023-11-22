@@ -4,7 +4,7 @@ import os
 from attributes.event_a import event
 from classes.BotHandler import BotHandler
 
-join_text = 'Hello there! I am MyShroom, your new companion on this server. I will assist you to accurately identify mushrooms using a powerful IA. **If you ever need assistance, just type "!shroom**".'
+join_text = 'Hello there! I am MyShroom, your new companion on this server. I will assist you to accurately identify mushrooms using a powerful IA. **If you ever need assistance, just type "!help**".'
 
 class BotClient(discord.Client):
 	
@@ -20,8 +20,10 @@ class BotClient(discord.Client):
 		print(f'{self.user.name} se ha iniciado correctamente.')
 
 	async def on_message(self, message):
-		if os.getenv('Environment','') == 'testing' and (message.guild is None 
-														or message.guild.id != int(os.getenv('GuildID'))):
+		if os.getenv('Environment','') == 'testing' and (message.guild.id != int(os.getenv('GuildID'))): #Testing
+			return
+
+		if message.guild is None:
 			return
 
 		if message.guild.id == '1157074447719735357' and message.channel != '1157112268878774301':
