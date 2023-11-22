@@ -2,21 +2,23 @@
 Command for Checking your MyShroom Coins:
 Once invoked, you can check your balances of coins for analyzing Mushrooms images. Remember if you do not have Coins you can't analyze!
 """
-import json
+
 from discord.ext import commands
 from attributes.command_a import command
 from attributes.rename_a import rename
-import discord
+from discord import Embed, Colour, Member
+from modules.databaseHandler import getUser, modifyCoins
+
 coinamountmessage = 'How many coins do you wish to give '
 error_noReply = 'Sorry, we did not receive a response in the time window'
+
 @rename('balance')
 @command
-async def balance(Client,ctx, extra):
+async def balance(Client, ctx, extra):
     user = ctx.author
-    await open_account(user)
-    users = await getdatabasedata()
-    wallet_amount=users[str(user.id)]["wallet"]
-    em = discord.Embed(title = f"{ctx.author.name}'s balance", color = discord.Colour.red())
+    user_data = await getUser(user.id)
+    wallet_amount = user_data["wallet"]
+    em = Embed(title = f"{ctx.author.name}'s balance", color = Colour.red())
     em.add_field(name = "Wallet Balance", value = str(wallet_amount) + ' ShroomCoins')
     em.set_thumbnail(url = user.avatar)
     await ctx.channel.send(embed = em)
@@ -24,7 +26,7 @@ async def balance(Client,ctx, extra):
 @rename('give')
 @command
 @commands.has_permissions(kick_members=True)
-async def give(Client, ctx, member: discord.Member):
+async def give(Client, ctx, member: Member):
     identification = member.replace("<","").replace(">","").replace("@","")
     user = await Client.fetch_user(identification)
     await ctx.channel.send(coinamountmessage + str(user.name) + '?')
@@ -36,29 +38,7 @@ async def give(Client, ctx, member: discord.Member):
     except TimeoutError:
         await ctx.channel.send(error_noReply)
         return
-    await open_account(user)
-    users = await getdatabasedata()
-    users[str(identification)]['wallet'] += coin_amount
+    await modifyCoins(identification, coin_amount)
     await ctx.channel.send(f"Someone gave you {coin_amount} Shroomcoins!!")
-    with open('src/files/database.json','w') as f:
-        json.dump(users,f)
-
-async def open_account(user):
-    users = await getdatabasedata()
-    if str(user.id) in users:
-        return False
-    else:
-        users[str(user.id)] = {}
-        users[str(user.id)]['wallet'] = 5
-        users[str(user.id)]['quest1'] = 0
-        users[str(user.id)]['quest2'] = 0
-    with open('src/files/database.json','w') as f:
-        json.dump(users,f)
-    return True
-
-async def getdatabasedata():
-    with open ('src/files/database.json','r') as f:
-        users  = json.load(f)
-    return users
 
 balance.__doc__ = __doc__

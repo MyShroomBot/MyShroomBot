@@ -12,14 +12,14 @@ error_no_command_text = 'Command not recognized. Type !help for see the commands
 @command
 async def help(Client, ctx, command_name):
 	if not command_name:
-			await ctx.channel.send(help_text) 
+			await ctx.channel.send(content=help_text, delete_after=80) 
 	else:
 		commands = Client.handler.commands
 		list_names = list(commands.keys())
 		if command_name in list_names:
 			doc = commands[command_name].__doc__
-			await ctx.channel.send(doc)
+			await ctx.channel.send(content=doc, delete_after=80)
 		else:
-			await ctx.channel.send(error_no_command_text)
+			await ctx.channel.send(content=error_no_command_text, delete_after=80)
 
 help.__doc__ = __doc__
