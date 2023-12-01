@@ -20,29 +20,29 @@ quest_in_progress = 'Sorry, you already finished or accepted his quest'
 async def getquest(Client, ctx, extra):
     user = ctx.author
     user_data = await getUser(user.id)
-    await ctx.channel.send(content=quest_text, delete_after=80)
+    await ctx.reply(content=quest_text, delete_after=80)
 
     def checkerResponse(m):
         return m.content and m.channel == ctx.channel and m.author == ctx.author
     try:
         response = await Client.wait_for('message', timeout=60.0, check=checkerResponse)
     except TimeoutError:
-        await ctx.channel.send(content=error_noReply, delete_after=80)
+        await ctx.reply(content=error_noReply, delete_after=90)
         return
     
     response = int(response.content)
     if (response == 1):
         if (user_data['quest1'] == -1):
             await modifyQuests(user.id, 'quest1')
-            await ctx.channel.send('You accepted quest 1, good luck on you new adventure!')
+            await ctx.reply(content='You accepted quest 1, good luck on you new adventure!')
         else:
-            await ctx.channel.send(content=quest_in_progress, delete_after=80)
+            await ctx.reply(content=quest_in_progress, delete_after=80)
         
     if (response == 2):
         if(user_data['quest2']==-1):
             await modifyQuests(user.id, 'quest2')
-            await ctx.channel.send('You accepted quest 2, good luck on you new adventure!')
+            await ctx.reply(content='You accepted quest 2, good luck on you new adventure!')
         else:
-            await ctx.channel.send(content=quest_in_progress, delete_after=80)
+            await ctx.reply(content=quest_in_progress, delete_after=80)
 
 getquest.__doc__ = __doc__

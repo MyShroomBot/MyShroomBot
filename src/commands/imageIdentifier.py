@@ -7,7 +7,7 @@ Subsequently, you will receive a response listing the five most likely mushroom 
 from asyncio import TimeoutError
 from attributes.command_a import command
 from attributes.rename_a import rename
-from models import decoder
+from models import decoder, binarydecoder
 from modules.databaseHandler import getUser, modifyCoins
 from modules.progressHandler import checkerQ1, checkerQ2
 from modules.responseHandler import responseHandler
@@ -18,17 +18,18 @@ error_noImage = 'Sorry, you did not attach an Image or use a format I do not sup
 error_noValid = 'Sorry, you use a no valid format of Image. Supported types: PNG, JPG, JPEG, TIFF, and BMP'
 error_noSize = 'Sorry, your file is above the valid size. Maximum file size: 10MB'
 error_noCoins = 'Sorry, you do not have enough coins to use the identification tool. Wait for next week to get more coins or complete quests to earn'
+error_not_shroom = 'Sorry, the image you sent is not a mushroom, please only send mushroom images.'
 
 @rename('shroom')
 @command
 async def imageIdentifier(Client, ctx, extra):
-    await ctx.channel.send(content=image_text, delete_after=80)
+    await ctx.reply(content=image_text, delete_after=90)
     def checkerResponse(m):
         return m.attachments and m.channel == ctx.channel and m.author == ctx.author
     try:
         response = await Client.wait_for('message', timeout=60.0, check=checkerResponse)
     except TimeoutError:
-        await ctx.channel.send(content=error_noImage, delete_after=80)
+        await ctx.reply(content=error_noImage, delete_after=80)
         return
     
     attachment = response.attachments[0]
@@ -36,15 +37,19 @@ async def imageIdentifier(Client, ctx, extra):
     user_data = await getUser(user.id)
 
     if user_data['wallet'] == 0:
-        await ctx.channel.send(content=error_noCoins, delete_after=80)
+        await ctx.reply(content=error_noCoins, delete_after=80)
         return
     if not attachment.filename.lower().endswith(valid_types):
-        await ctx.channel.send(content=error_noValid, delete_after=80)
+        await ctx.reply(content=error_noValid, delete_after=80)
         return
     if attachment.size > 10000000:
-        await ctx.channel.send(content=error_noSize, delete_after=80)
+        await ctx.reply(content=error_noSize, delete_after=80)
         return
-    
+    Binary_Model = binarydecoder.IdentifierBinaryModel()
+    filter = Binary_Model.predict(attachment.url)
+    if str(filter) == 'Other':
+        await ctx.reply(content=error_not_shroom, delete_after=80)
+        return 
     Model = decoder.IdentifierModel()
     answer = Model.predict(attachment.url)
     link = await responseHandler(answer)
@@ -63,6 +68,6 @@ async def imageIdentifier(Client, ctx, extra):
     else:
         response = f'You have found a **mushroom!**. This is the Scientific name: **{answer}**. You can get more information about it in here: \n {link}'
 
-    await ctx.channel.send(response)
+    await ctx.reply(content=response)
 
 imageIdentifier.__doc__ = __doc__

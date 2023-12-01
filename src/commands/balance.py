@@ -29,14 +29,14 @@ async def balance(Client, ctx, extra):
 async def give(Client, ctx, member: Member):
     identification = member.replace("<","").replace(">","").replace("@","")
     user = await Client.fetch_user(identification)
-    await ctx.channel.send(coinamountmessage + str(user.name) + '?')
+    await ctx.reply(coinamountmessage + str(user.name) + '?', delete_after=90)
     def checkerResponse(m):
         return m.content and m.channel == ctx.channel and m.author == ctx.author
     try:
         coin_amount = await Client.wait_for('message', timeout=60.0, check=checkerResponse)
         coin_amount = int(coin_amount.content)
     except TimeoutError:
-        await ctx.channel.send(error_noReply)
+        await ctx.reply(error_noReply, delete_after=90)
         return
     await modifyCoins(identification, coin_amount)
     await ctx.channel.send(f"Someone gave you {coin_amount} Shroomcoins!!")

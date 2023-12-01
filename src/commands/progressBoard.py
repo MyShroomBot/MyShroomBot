@@ -28,6 +28,6 @@ async def questboard(Client, ctx, extra):
     else:
         em.add_field(name = "Quest 2", value = 'Not started')
     em.set_thumbnail(url = user.avatar)
-    await ctx.channel.send(embed = em)
+    await ctx.reply(embed = em)
 
 questboard.__doc__ = __doc__
