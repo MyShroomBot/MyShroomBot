@@ -8,7 +8,7 @@ async def checkerQ1(id, ctx):
         await modifyQuests(str(id),'quest1')
         if user_data['quest1'] == 2:
             await modifyCoins(str(id),amount=5)
-            await ctx.channel.send(content=quest_complete)
+            await ctx.reply(content=quest_complete)
 
 async def checkerQ2(id,ctx):
     user_data = await getUser(str(id))
@@ -16,5 +16,5 @@ async def checkerQ2(id,ctx):
         await modifyQuests(str(id),'quest1')
         if user_data['quest1'] == 1:
             await modifyCoins(str(id),amount=5)
-            await ctx.channel.send(content=quest_complete)
+            await ctx.reply(content=quest_complete)
         
