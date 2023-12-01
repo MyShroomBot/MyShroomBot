@@ -1,11 +1,10 @@
 from torchvision.models import resnet34
 import torch.nn as nn
-from torch import load, device
+from torch import load, device, unsqueeze
 import torchvision.transforms as transforms
-from PIL import Image
 import requests
+from PIL import Image
 from io import BytesIO
-import torch
 
 class IdentifierModel:
     def __init__(self):
@@ -14,7 +13,7 @@ class IdentifierModel:
         model.fc = nn.Linear(in_features, 114)
         dev = device("cpu")
         model.to(dev)
-        model.load_state_dict(load('./src/files/myshroomweights114.pth',map_location=torch.device('cpu')))
+        model.load_state_dict(load('./src/files/decoder_weights.pth',map_location=device('cpu')))
         model.eval()
         self.mod = model
         self.data_transforms = transforms.Compose([
@@ -142,8 +141,9 @@ class IdentifierModel:
     def predict (self, url):
         resp= requests.get(url)
         img = Image.open(BytesIO(resp.content))
+        img = img.convert("RGB")
         clean_image = self.data_transforms(img)
-        clean_image = torch.unsqueeze(clean_image,dim=0)
+        clean_image = unsqueeze(clean_image,dim=0)
         prediction = self.mod(clean_image)
         predicted_index = int(prediction[0].argmax(0))
         predicted = self.class_mapping[predicted_index]
