@@ -17,8 +17,8 @@ class BotClient(discord.Client):
 		self.handler = BotHandler(self, c_prefix)	
 		
 	async def on_ready(self):
-		print(f'{self.user.name} se ha iniciado correctamente.')
-
+		print(f'{self.user.name} has been started successfully.')
+	
 	async def on_message(self, message):
 		if os.getenv('Environment','') == 'testing' and (message.guild.id != int(os.getenv('GuildID'))): #Testing
 			return
